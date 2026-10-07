@@ -1,0 +1,24 @@
+{
+  "method": "bias_corrected_convex_weighted_ensemble",
+  "models": [
+    "XGBoost",
+    "BiLSTM",
+    "CNN-LSTM"
+  ],
+  "model_order": [
+    "XGBoost",
+    "BiLSTM",
+    "CNN-LSTM"
+  ],
+  "bias": [
+    2.3118783018570657,
+    19.382345107374224,
+    6.6848520102882905
+  ],
+  "weights": [
+    0.35000000000000003,
+    0.0,
+    0.6499999999999999
+  ],
+  "weight_step": 0.01
+}

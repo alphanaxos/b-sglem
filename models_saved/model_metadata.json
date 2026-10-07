@@ -1,0 +1,16 @@
+{
+  "project": "Bengaluru Electricity Load Forecasting",
+  "models": [
+    "XGBoost",
+    "BiLSTM",
+    "CNN-LSTM"
+  ],
+  "n_features": 28,
+  "time_steps": 24,
+  "train_ratio": 0.8,
+  "target_column": "load",
+  "random_seed": 42,
+  "lstm_epochs": 20,
+  "lstm_units": 64,
+  "saved_at": "2026-08-29T22:48:48.759832"
+}

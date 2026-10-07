@@ -1,0 +1,49 @@
+# ==============================================================================
+# Render Blueprint Specification for B-SGLEM
+# Bengaluru Smart Grid Load Forecasting & Energy Management System
+# ==============================================================================
+# Deploys two decoupled services from this repository:
+# 1. FastAPI Backend (REST API, ML Inference, PyPSA Dispatch, Monte Carlo)
+# 2. Streamlit Dashboard (Operational Visualization UI)
+# ==============================================================================
+
+services:
+  # ── 1. Backend Web Service ─────────────────────────────────────────────────
+  - type: web
+    name: bsglem-backend
+    env: docker
+    dockerfilePath: ./Dockerfile.api
+    dockerContext: .
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: HOST
+        value: 0.0.0.0
+      - key: MODEL_DIR
+        value: /app/models_saved
+      - key: DATA_DIR
+        value: /app/data
+      - key: ACTIVE_DATASET
+        value: "2024"
+      - key: DATA_SOURCE_MODE
+        value: "historical"
+      - key: ENABLE_SIMULATION_MODE
+        value: "false"
+      - key: CORS_ORIGINS
+        # Set to dashboard HTTPS URL once provisioned, or keep * for permissive access
+        value: "*"
+        sync: false
+
+  # ── 2. Streamlit Dashboard Web Service ─────────────────────────────────────
+  - type: web
+    name: bsglem-dashboard
+    env: docker
+    dockerfilePath: ./Dockerfile.dashboard
+    dockerContext: .
+    plan: free
+    envVars:
+      - key: BSGLEM_API_URL
+        # Set to actual deployed backend HTTPS URL: https://<backend-service-name>.onrender.com
+        # sync: false allows setting the live URL in Render Dashboard without repo overwrite
+        value: "https://bsglem-backend.onrender.com"
+        sync: false

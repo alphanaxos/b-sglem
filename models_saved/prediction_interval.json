@@ -1,0 +1,8 @@
+{
+  "method": "empirical_residual",
+  "lower_quantile": 5,
+  "upper_quantile": 95,
+  "q05": -146.87055077496714,
+  "q95": 145.04946704407556,
+  "residual_source": "stacked OOF ensemble"
+}

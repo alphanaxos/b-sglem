@@ -1,0 +1,35 @@
+# ==============================================================================
+# B-SGLEM Streamlit Dashboard Service
+# Interactive Grid Telemetry, Forecasting & Energy Management UI
+# ==============================================================================
+FROM python:3.12-slim
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    BSGLEM_API_URL="http://backend:8000" \
+    PORT=8501
+
+WORKDIR /app
+
+# Install system utilities
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install dependencies from single authoritative requirements.txt
+COPY requirements.txt .
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
+
+# Copy Streamlit deployment configuration and dashboard package
+COPY .streamlit/ ./.streamlit/
+COPY dashboard/ ./dashboard/
+
+EXPOSE 8501
+
+# Health check probe against Streamlit _stcore/health endpoint
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD python -c "import urllib.request, os; port = os.getenv('PORT', '8501'); urllib.request.urlopen(f'http://127.0.0.1:{port}/_stcore/health')" || exit 1
+
+# Start Streamlit in production mode (headless, bound to 0.0.0.0, dynamic PORT)
+CMD ["sh", "-c", "streamlit run dashboard/app.py --server.port=${PORT:-8501} --server.address=0.0.0.0 --server.headless=true"]
