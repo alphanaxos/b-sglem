@@ -6,6 +6,7 @@ FROM python:3.12-slim
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONPATH=/app \
     BSGLEM_API_URL="http://backend:8000" \
     PORT=8501
 
